@@ -89,5 +89,20 @@ while True:
     if direction == "DOWN":
         snakePos[1] += m
     if direction == "UP":
-        snakePos[1] -= m  
+        snakePos[1] -= m
+    #Eat food:
+    snakeBody.insert(0,list(snakePos))
+    if snakePos[0] == foodPos[0] and snakePos[1] == foodPos[1]:
+        score += 1
+        foodFlag = False
+    else:
+        snakeBody.pop()
+    #Create new food:
+    if foodFlag == False:
+        foodX = random.randrange(1,71)
+        foodY = random.randrange(1,45)
+        if foodX % 2 != 1 : foodX += 1
+        if foodY % 2 != 1 : foodY += 1
+        foodPos = [foodX*10, foodY*10]
+        foodFlag = True
     
