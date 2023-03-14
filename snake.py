@@ -17,8 +17,8 @@ snakePos = [100,60]
 snakeBody = [[100,60],[80,60],[60,60]]
 foodX = random.randrange(1,71)
 foodY = random.randrange(1,45)
-if foodX % 2 != 1 : foodX += 1
-if foodY % 2 != 1 : foodY += 1
+if foodX % 2 != 0 : foodX += 1
+if foodY % 2 != 0 : foodY += 1
 foodPos = [foodX*10, foodY*10]
 foodFlag = True
 direction = 'RIGHT'
@@ -62,15 +62,15 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
         if event.type == pygame.KEYDOWN:
-            if event.type == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT:
                 changeTo = 'RIGHT'
-            if event.type == pygame.K_LEFT:
+            if event.key == pygame.K_LEFT:
                 changeTo = 'LEFT'
-            if event.type == pygame.K_UP:
+            if event.key == pygame.K_UP:
                 changeTo = 'UP'
-            if event.type == pygame.K_DOWN:
+            if event.key == pygame.K_DOWN:
                 changeTo = 'DOWN'
-            if event.type == pygame.K_ESCAPE:
+            if event.key == pygame.K_ESCAPE:
                 pygame.event.post(pygame.event.Event(pygame.QUIT))  
     #Handle move 
     if changeTo == "RIGHT" and not direction == "LEFT":
@@ -101,8 +101,8 @@ while True:
     if foodFlag == False:
         foodX = random.randrange(1,71)
         foodY = random.randrange(1,45)
-        if foodX % 2 != 1 : foodX += 1
-        if foodY % 2 != 1 : foodY += 1
+        if foodX % 2 != 0 : foodX += 1
+        if foodY % 2 != 0 : foodY += 1
         foodPos = [foodX*10, foodY*10]
         foodFlag = True
     #UI game:
@@ -110,4 +110,17 @@ while True:
     for pos in snakeBody:
         gameSuface.blit(imageBody,pygame.Rect(pos[0],pos[1],m,m))
     gameSuface.blit(imageHead,pygame.Rect(snakeBody[0][0],snakeBody[0][1],m,m))   
-    gameSuface.blit(imageFood,pygame.Rect(foodPos[0],foodPos[1],m,m))   
+    gameSuface.blit(imageFood,pygame.Rect(foodPos[0],foodPos[1],m,m))  
+    #Move to border
+    if snakePos[0] > 710 or snakePos[0] < 10:
+        gameOver()
+    if snakePos[1] > 450 or snakePos[1] < 10:
+        gameOver()
+    #Snake eat snake:
+    for b in snakeBody[1:]:
+        if snakePos[0] == b[0] and snakePos[1] == b[1]:
+            gameOver()
+    #UI border
+    pygame.draw.rect(gameSuface,gray,(10,10,715,455),2)
+    showScore()
+    pygame.display.flip()
