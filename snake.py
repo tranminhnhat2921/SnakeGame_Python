@@ -26,11 +26,11 @@ changeTo = direction
 score = 0
 
 #Color
-red = pygame.color(255,0,0)
-blue = pygame.color(65,105,255)
-black = pygame.color(255,0,0)
-white = pygame.color(255,255,255)
-gray = pygame.color(128,128,128)
+red = pygame.Color(255,0,0)
+blue = pygame.Color(65,105,255)
+black = pygame.Color(255,0,0)
+white = pygame.Color(255,255,255)
+gray = pygame.Color(128,128,128)
 
 #Gameover function
 def gameOver():
@@ -105,4 +105,9 @@ while True:
         if foodY % 2 != 1 : foodY += 1
         foodPos = [foodX*10, foodY*10]
         foodFlag = True
-    
+    #UI game:
+    gameSuface.fill(white)
+    for pos in snakeBody:
+        gameSuface.blit(imageBody,pygame.Rect(pos[0],pos[1],m,m))
+    gameSuface.blit(imageHead,pygame.Rect(snakeBody[0][0],snakeBody[0][1],m,m))   
+    gameSuface.blit(imageFood,pygame.Rect(foodPos[0],foodPos[1],m,m))   
