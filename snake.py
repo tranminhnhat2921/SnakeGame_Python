@@ -108,9 +108,12 @@ while True:
     #UI game:
     gameSuface.fill(white)
     for pos in snakeBody:
-        gameSuface.blit(imageBody,pygame.Rect(pos[0],pos[1],m,m))
-    gameSuface.blit(imageHead,pygame.Rect(snakeBody[0][0],snakeBody[0][1],m,m))   
-    gameSuface.blit(imageFood,pygame.Rect(foodPos[0],foodPos[1],m,m))  
+        #gameSuface.blit(imageBody,pygame.Rect(pos[0],pos[1],m,m))
+        pygame.draw.rect(gameSuface,blue,pygame.Rect(pos[0],pos[1],m,m))
+    #gameSuface.blit(imageHead,pygame.Rect(snakeBody[0][0],snakeBody[0][1],m,m)) 
+    pygame.draw.rect(gameSuface,blue,pygame.Rect(snakeBody[0][0],snakeBody[0][1],m,m))  
+    #gameSuface.blit(imageFood,pygame.Rect(foodPos[0],foodPos[1],m,m))  
+    pygame.draw.rect(gameSuface,gray,pygame.Rect(foodPos[0],foodPos[1],m,m))  
     #Move to border
     if snakePos[0] > 710 or snakePos[0] < 10:
         gameOver()
