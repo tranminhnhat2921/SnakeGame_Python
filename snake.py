@@ -32,6 +32,29 @@ black = pygame.color(255,0,0)
 white = pygame.color(255,255,255)
 gray = pygame.color(128,128,128)
 
+#Gameover function
+def gameOver():
+    gFont = pygame.font.SysFont('consolas', 40)
+    gSurf = gFont.render('Game over!', True, red)
+    gRect = gSurf.get_rect()
+    gRect.midtop = (360,150)
+    showScore(0)
+    pygame.display.flip()
+    time.sleep(5)
+    pygame.quit()
+    sys.exit()
+
+#Show score function
+def showScore(choice = 1):
+    sFont = pygame.font.SysFont('consolas', 20)
+    sSurf = sFont.render('Score: {0}'.format(score), True, black)
+    sRect = sSurf.get_rect()
+    if choice == 1:
+        sRect.midtop = (70,20)
+    else:
+        sRect.midtop = (360,230)
+    gameSuface.blit(sSurf,sRect)
+    
 #Main loop
 while True:
     pygame.time.delay(200)
