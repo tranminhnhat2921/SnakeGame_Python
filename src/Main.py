@@ -1,31 +1,23 @@
-#import lib
-import pygame, random, time, sys
-pygame.init()
+import pygame, time, sys
+from Snake import *
 
-#Load image
-m = 20
-imageBody = pygame.transform.scale(pygame.image.load('body.jpg'),(m,m))
-imageHead = pygame.transform.scale(pygame.image.load('head.jpg'),(m,m))
-imageFood = pygame.transform.scale(pygame.image.load('covid.png'),(m,m))
-
-#Create screen
-gameSuface = pygame.display.set_mode((735,475))
-pygame.display.set_caption('Snake game')
-
-#Variable
+#Global variable
+size = 20
 snakePos = [100,60]
 snakeBody = [[100,60],[80,60],[60,60]]
-foodX = random.randrange(1,71)
-foodY = random.randrange(1,45)
-if foodX % 2 != 0 : foodX += 1
-if foodY % 2 != 0 : foodY += 1
-foodPos = [foodX*10, foodY*10]
 foodFlag = True
 direction = 'RIGHT'
 changeTo = direction
 score = 0
 
-#Color
+#Init PyGame lib
+pygame.init()
+
+#Create screen
+gameSuface = pygame.display.set_mode((735,475))
+pygame.display.set_caption('Snake game')
+
+#Define color
 red = pygame.Color(255,0,0)
 blue = pygame.Color(65,105,255)
 black = pygame.Color(255,0,0)
@@ -40,7 +32,7 @@ def gameOver():
     gRect.midtop = (360,150)
     showScore(0)
     pygame.display.flip()
-    time.sleep(5)
+    time.sleep(2)
     pygame.quit()
     sys.exit()
 
@@ -55,7 +47,8 @@ def showScore(choice = 1):
         sRect.midtop = (360,230)
     gameSuface.blit(sSurf,sRect)
 
-#Main loop
+#Main game
+foodPos = createFood()
 while True:
     pygame.time.delay(200)
     for event in pygame.event.get():
@@ -72,58 +65,39 @@ while True:
                 changeTo = 'DOWN'
             if event.key == pygame.K_ESCAPE:
                 pygame.event.post(pygame.event.Event(pygame.QUIT))  
-    #Handle move 
-    if changeTo == "RIGHT" and not direction == "LEFT":
-        direction = "RIGHT"
-    if changeTo == "LEFT" and not direction == "RIGHT":
-        direction = "LEFT"
-    if changeTo == "UP" and not direction == "DOWN":
-        direction = "UP"
-    if changeTo == "DOWN" and not direction == "UP":
-        direction = "DOWN"
-    #Update position when move:
-    if direction == "RIGHT":
-        snakePos[0] += m
-    if direction == "LEFT":
-        snakePos[0] -= m
-    if direction == "DOWN":
-        snakePos[1] += m
-    if direction == "UP":
-        snakePos[1] -= m
-    #Eat food:
+    direction = moving(changeTo, direction, snakePos, size)
+
+    # Handle snake eat food:
     snakeBody.insert(0,list(snakePos))
     if snakePos[0] == foodPos[0] and snakePos[1] == foodPos[1]:
         score += 1
         foodFlag = False
     else:
         snakeBody.pop()
-    #Create new food:
+
     if foodFlag == False:
-        foodX = random.randrange(1,71)
-        foodY = random.randrange(1,45)
-        if foodX % 2 != 0 : foodX += 1
-        if foodY % 2 != 0 : foodY += 1
-        foodPos = [foodX*10, foodY*10]
+        foodPos = createFood()
         foodFlag = True
-    #UI game:
+    
+    # Set background and snake color
     gameSuface.fill(white)
     for pos in snakeBody:
-        #gameSuface.blit(imageBody,pygame.Rect(pos[0],pos[1],m,m))
-        pygame.draw.rect(gameSuface,blue,pygame.Rect(pos[0],pos[1],m,m))
-    #gameSuface.blit(imageHead,pygame.Rect(snakeBody[0][0],snakeBody[0][1],m,m)) 
-    pygame.draw.rect(gameSuface,blue,pygame.Rect(snakeBody[0][0],snakeBody[0][1],m,m))  
-    #gameSuface.blit(imageFood,pygame.Rect(foodPos[0],foodPos[1],m,m))  
-    pygame.draw.rect(gameSuface,gray,pygame.Rect(foodPos[0],foodPos[1],m,m))  
-    #Move to border
+        pygame.draw.rect(gameSuface,blue,pygame.Rect(pos[0],pos[1],size,size))
+    pygame.draw.rect(gameSuface,blue,pygame.Rect(snakeBody[0][0],snakeBody[0][1],size,size))  
+    pygame.draw.rect(gameSuface,gray,pygame.Rect(foodPos[0],foodPos[1],size,size))  
+
+    # Move to border
     if snakePos[0] > 710 or snakePos[0] < 10:
         gameOver()
     if snakePos[1] > 450 or snakePos[1] < 10:
         gameOver()
-    #Snake eat snake:
+
+    # Snake eat itself
     for b in snakeBody[1:]:
         if snakePos[0] == b[0] and snakePos[1] == b[1]:
             gameOver()
-    #UI border
+
+    # Draw border and display game
     pygame.draw.rect(gameSuface,gray,(10,10,715,455),2)
     showScore()
     pygame.display.flip()
