@@ -54,10 +54,40 @@ def showScore(choice = 1):
     else:
         sRect.midtop = (360,230)
     gameSuface.blit(sSurf,sRect)
-    
+
 #Main loop
 while True:
     pygame.time.delay(200)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+        if event.type == pygame.KEYDOWN:
+            if event.type == pygame.K_RIGHT:
+                changeTo = 'RIGHT'
+            if event.type == pygame.K_LEFT:
+                changeTo = 'LEFT'
+            if event.type == pygame.K_UP:
+                changeTo = 'UP'
+            if event.type == pygame.K_DOWN:
+                changeTo = 'DOWN'
+            if event.type == pygame.K_ESCAPE:
+                pygame.event.post(pygame.event.Event(pygame.QUIT))  
+    #Handle move 
+    if changeTo == "RIGHT" and not direction == "LEFT":
+        direction = "RIGHT"
+    if changeTo == "LEFT" and not direction == "RIGHT":
+        direction = "LEFT"
+    if changeTo == "UP" and not direction == "DOWN":
+        direction = "UP"
+    if changeTo == "DOWN" and not direction == "UP":
+        direction = "DOWN"
+    #Update position when move:
+    if direction == "RIGHT":
+        snakePos[0] += m
+    if direction == "LEFT":
+        snakePos[0] -= m
+    if direction == "DOWN":
+        snakePos[1] += m
+    if direction == "UP":
+        snakePos[1] -= m  
+    
